@@ -24,6 +24,7 @@ async function init() {
 
 async function mainMenu() {
   inquirer
+  //Creates the prompt to ask the user what they would like to do
     .prompt([
       {
         type: "list",
@@ -40,6 +41,7 @@ async function mainMenu() {
         ],
       },
     ])
+    //Switch statement to determine what the user wants to do
     .then((answer) => {
       if (answer.action == "View All Departments") {
         db.query("SELECT * FROM department;", function (err, data) {
@@ -50,6 +52,7 @@ async function mainMenu() {
             mainMenu();
           }
         });
+        //If the user wants to view all roles
       } else if (answer.action == "View All Roles") {
         db.query("SELECT * FROM role;", function (err, data) {
           if (err) {
@@ -59,6 +62,7 @@ async function mainMenu() {
             mainMenu();
           }
         });
+        //If the user wants to view all employees
       } else if (answer.action == "View All Employees") {
         db.query("SELECT * FROM employee;", function (err, data) {
           if (err) {
@@ -69,7 +73,7 @@ async function mainMenu() {
           }
         });
       }
-      // TO DO:  View All Employees
+      //If the user wants to add a department
       else if (answer.action == "Add a Department") {
         inquirer
           .prompt([
@@ -79,8 +83,8 @@ async function mainMenu() {
               name: "name",
             },
           ])
+          //Inserts the department into the database
           .then((answers) => {
-            // db.query(`INSERT INTO department (name, title) VALUES (?, ?)`, [answers.name, answers.title] ,function (err, data) {
             db.query(
               `INSERT INTO department (name) VALUES ($1);`,
               [answers.name],
@@ -94,6 +98,7 @@ async function mainMenu() {
               }
             );
           });
+          //If the user wants to add a role
       } else if (answer.action == "Add a Role") {
         inquirer
           .prompt([
@@ -113,8 +118,8 @@ async function mainMenu() {
               name: "department",
             },
           ])
+          //Inserts the role into the database
           .then((answers) => {
-            // db.query(`INSERT INTO department (name, title) VALUES (?, ?)`, [answers.name, answers.title] ,function (err, data) {
             db.query(
               `INSERT INTO role (title, salary, department) VALUES ($1, $2, $3);`,
               [answers.title, answers.salary, answers.department],
@@ -128,6 +133,7 @@ async function mainMenu() {
               }
             );
           });
+          // If the user wants to add an employee
       } else if (answer.action == "Add an Employee") {
         inquirer
           .prompt([
@@ -152,8 +158,8 @@ async function mainMenu() {
               name: "manager_id",
             },
           ])
+          //Inserts the employee into the database
           .then((answers) => {
-            // db.query(`INSERT INTO department (name, title) VALUES (?, ?)`, [answers.name, answers.title] ,function (err, data) {
             db.query(
               `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4);`,
               [
@@ -172,6 +178,7 @@ async function mainMenu() {
               }
             );
           });
+          //If the user wants to update an employee role
       } else if (answer.action == "Update an Employee Role") {
         inquirer
           .prompt([
@@ -186,8 +193,8 @@ async function mainMenu() {
               name: "role_id",
             }
           ])
+          //Updates the employee role in the database
           .then((answers) => {
-            // db.query(`INSERT INTO department (name, title) VALUES (?, ?)`, [answers.name, answers.title] ,function (err, data) {
             db.query(
               `UPDATE employee SET role_id = $1 WHERE id = $2;`,
               [
